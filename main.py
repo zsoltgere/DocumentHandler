@@ -2,11 +2,14 @@
 
 
 from lib import docxHandler
-from lib import docxReader
+
 
 path="test.docx"
 
-docx_self= docxReader.DocxReader(path)
-docx_self.print()
-docx= docxHandler.DocxHandler(path)
-docx.print()
+mode = 1
+
+docx_self= docxHandler.DocxHandler(path, mode)
+
+
+
+
