@@ -1,22 +1,22 @@
 #  -*- coding: utf-8 -*-
 
-# parsers
-import xml.dom.minidom as MD
+# parser
 from lxml import etree
-import xml.etree.ElementTree as ET
 
 # file operations
 import zipfile
 # regular expression for debug function
 import re
 # abstract class
-from lib.documentHandler import DocumentHandler
+from lib.xmlBasedHandler import XmlBasedHandler
 # ordered dictionary to keep insertion order
 from collections import OrderedDict
 
 
 
-class DocxHandler(DocumentHandler):
+class DocxHandler(XmlBasedHandler):
+
+    EXTENSION=".docx"
 
     #namespaces for the xml parser
     DOCX_NAMESPACE='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
@@ -27,7 +27,7 @@ class DocxHandler(DocumentHandler):
 
     # file path, parser (default is lxml)
     def __init__(self,path):
-        super(DocxHandler,self).__init__(path,3)
+        super(DocxHandler,self).__init__(path)
 
         #open the .docx file as zip file
         self.zip_file=zipfile.ZipFile(path, 'a')
@@ -44,11 +44,17 @@ class DocxHandler(DocumentHandler):
         self.files=OrderedDict([(item,self.zip_file.read(item)) for item in self.relevant_file_namelist])
 
         # parse the xml files
-        self.readDocumentXML_lxml()
+        self.parseXML()
 
+    def parseXML(self):
 
+        for filename, zipf in self.files.items():
+            self.xml_content[filename] = etree.fromstring(zipf)
 
-
+        # get all the paragraphs
+        self.buildParagraphList(self.xml_content)
+        # debug info
+        print("readen files: " + str(len(self.xml_content)))
 
     def buildParagraphList(self, dict):
 
@@ -78,7 +84,6 @@ class DocxHandler(DocumentHandler):
             self.paragraph_indexes[range(counter,par_counter)]=filename
         self.para=self.paragraph_list
 
-
     def update(self,list=[]):
 
         if not list:
@@ -100,6 +105,12 @@ class DocxHandler(DocumentHandler):
                         text.text = list [par_counter]
 
                     par_counter+=1
+
+    def save_xml(self):
+        for filename, content in self.xml_content.items():
+                self.createXMLfile(filename, etree.tostring(content, encoding="utf-8"))
+
+
 
 
 
@@ -165,46 +176,3 @@ class DocxHandler(DocumentHandler):
                     print (text.text)
 
 
-    # parse the XML files with xml.dom.minidom
-    def readDocumentXML_MINIDOM(self):
-
-        self.xml_content = MD.parseString(self.document_xml)
-
-        for i in self.header_files:
-            self.header_contents.append(MD.parseString(i))
-        for i in self.footer_files:
-            self.footer_contents.append(MD.parseString(i))
-
-    # parse the XML file with xml.etree.ElementTree
-    def readDocumentXML_ElementTree(self):
-
-        # register namespaces
-        # OK
-        ET.register_namespace('mc',"http://schemas.openxmlformats.org/markup-compatibility/2006")
-        ET.register_namespace('r',"http://schemas.openxmlformats.org/officeDocument/2006/relationships")
-        ET.register_namespace('w',"http://schemas.openxmlformats.org/wordprocessingml/2006/main")
-
-        # nem hasznalt??
-        ET.register_namespace('m',"http://schemas.openxmlformats.org/officeDocument/2006/math")
-
-        ET.register_namespace('wp',"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing")
-        ET.register_namespace('wp14',"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing")
-
-        ET.register_namespace('wpc',"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas")
-        ET.register_namespace('wpg',"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup")
-        ET.register_namespace('wpi',"http://schemas.microsoft.com/office/word/2010/wordprocessingInk")
-        ET.register_namespace('wps',"http://schemas.microsoft.com/office/word/2010/wordprocessingShape")
-
-        ET.register_namespace('wne',"http://schemas.microsoft.com/office/word/2006/wordml")
-        ET.register_namespace('w14',"http://schemas.microsoft.com/office/word/2010/wordml")
-        ET.register_namespace('w15',"http://schemas.microsoft.com/office/word/2012/wordml")
-
-        ET.register_namespace('o',"urn:schemas-microsoft-com:office:office")
-        ET.register_namespace('v',"urn:schemas-microsoft-com:vml")
-        ET.register_namespace('w10',"urn:schemas-microsoft-com:office:word")
-
-
-        self.xml_content = ET.fromstring(self.document_xml)
-
-        # debug for namespaces
-        # print(self.namespace(self.xml_content))

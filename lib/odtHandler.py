@@ -1,18 +1,19 @@
 #  -*- coding: utf-8 -*-
-from lib.documentHandler import DocumentHandler
 
+from lib.xmlBasedHandler import XmlBasedHandler
 import zipfile
-from lxml import etree
 import xml.dom.minidom as MD
 from collections import OrderedDict
 
 
-class OdtHandler(DocumentHandler):
+class OdtHandler(XmlBasedHandler):
 
+    EXTENSION=".odt"
     ODT_PARAGRAPH = "text:p"
+    ODT_TEXT_TAG="#text"
 
     def __init__(self,path):
-        super(OdtHandler,self).__init__(path,2)
+        super(OdtHandler,self).__init__(path)
 
         #open the .odt file as zip file
         self.zip_file=zipfile.ZipFile(path,'a')
@@ -23,10 +24,17 @@ class OdtHandler(DocumentHandler):
         self.relevant_file_namelist=["content.xml","styles.xml"]
         self.files=OrderedDict([(item,self.zip_file.read(item)) for item in self.relevant_file_namelist])
 
-        self.readDocumentXML_lxml()
+        self.parseXML()
 
+    def parseXML(self):
 
+        for filename, zipf in self.files.items():
+            self.xml_content[filename] = MD.parseString(zipf)
 
+        # get all the paragraphs
+        self.buildParagraphList(self.xml_content)
+        #debug info
+        print ("readen files: "+str(len(self.xml_content)))
 
     def buildParagraphList(self,dict):
 
@@ -62,7 +70,6 @@ class OdtHandler(DocumentHandler):
             self.paragraph_indexes[range(counter,par_counter)]=filename
         self.para=self.paragraph_list
 
-
     def update(self,list=[]):
         if not list:
             list = self.para
@@ -79,17 +86,24 @@ class OdtHandler(DocumentHandler):
                     # implement the splitting function/algorithm to here
                     splitted_counter = 0
                     for node in paragraph.childNodes:
-                        if node.nodeName == "#text":
+                        if node.nodeName == self.ODT_TEXT_TAG :
                             if splitted_counter == 0:
                                 node.nodeValue=list[par_counter]
                                 splitted_counter+=1
                             else:
+                                # todo
                                 node.nodeValue="###########SPLITTED TEXT############TODO#############"
                         # span tag
                         for childnode in node.childNodes:
-                            if childnode.nodeName == "#text":
+                            if childnode.nodeName == self.ODT_TEXT_TAG:
                                 childnode.nodeValue = list[par_counter]
                     par_counter+=1
+
+    def save_xml(self):
+        for filename, content in self.xml_content.items():
+            self.createXMLfile(filename, content.documentElement.toprettyxml(encoding="utf-8"))
+
+
 
 
     '''
@@ -111,11 +125,9 @@ class OdtHandler(DocumentHandler):
 
 
 
+
     '''
     #### obsolete functions ####
     '''
 
 
-    # parse the XML file with xml.dom.minidom
-    def readDocumentXML_MINIDOM(self):
-        self.xml_content = MD.parseString(self.document_xml)

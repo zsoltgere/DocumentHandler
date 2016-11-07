@@ -1,8 +1,10 @@
 #  -*- coding: utf-8 -*-
-from lib.documentHandler import DocumentHandler
+from lib.xmlBasedHandler import XmlBasedHandler
 
 
-class RtfHandler(DocumentHandler):
+class RtfHandler(XmlBasedHandler):
 
-    def __init__(self):
-        pass
+    EXTENSION=".rtf"
+
+    def __init__(self,path):
+        super(RtfHandler,self).__init__(path)
