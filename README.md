@@ -1,12 +1,5 @@
-
-class inheritance structure:
-
+﻿
 todo:
-
-kérdés:
-- txtben mi számít új bekezdésnek? a sortörés (shitf+enter) és az új bekezdés (enter) ugyanúgy jelenik meg kiolvasás során
-    - üres sorok választják el a bekezdéseket?
-    - soronként olvasva minden sor egy bekezdés?
 
 major:
 

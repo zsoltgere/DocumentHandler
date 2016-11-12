@@ -4,7 +4,6 @@
 from lib import documentHandler
 
 
-
 # files without text splitting inside the paragrapsh
 docx_path="proba2.docx"
 odt_path="proba2.odt"
@@ -60,3 +59,4 @@ for ind in range(len(rtf_paras)):
 
 rtf_handler.save("output")
 '''
+
