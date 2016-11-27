@@ -25,10 +25,10 @@ class BasicHandler():
         # returns the copy of the paragraph list
         return copy(self.para)
 
-    def buildParagraphList(self,dict):
+    def buildParagraphList(self):
         pass
 
-    def update(self,list):
+    def update(self,list=[]):
         pass
 
     def save(self,name):
@@ -44,3 +44,34 @@ class BasicHandler():
 
     def validateList(self,list):
         pass
+
+
+# Paragraph class will represent a paragraph and separate the fragments as they are stored in the files
+class Paragraph():
+
+    def __init__(self):
+        self.fragments=[]
+
+    def replace(self,old,new):
+        for fragment in self.fragments:
+            print ("asd")
+
+    def getParagraph(self):
+        paragraph=""
+
+        for fragment in self.fragments:
+            paragraph+=fragment
+
+        return paragraph
+
+    def createParagraphList(list):
+        temp=[]
+        for paragraph in list:
+            para = ""
+
+            for fragment in paragraph.fragments:
+                para += fragment
+
+            temp.append(para)
+
+        return temp

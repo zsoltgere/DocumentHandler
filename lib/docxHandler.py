@@ -1,7 +1,6 @@
 #  -*- coding: utf-8 -*-
 
 # parser
-from lxml import etree
 
 # file operations
 import zipfile
@@ -11,6 +10,7 @@ import re
 from lib.xmlBasedHandler import XmlBasedHandler
 # ordered dictionary to keep insertion order
 from collections import OrderedDict
+from lib.basicHandler import Paragraph
 
 
 
@@ -18,10 +18,11 @@ class DocxHandler(XmlBasedHandler):
 
     EXTENSION=".docx"
 
-    #namespaces for the xml parser
-    DOCX_NAMESPACE='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
-    DOCX_PARAGRAPH = DOCX_NAMESPACE + 'p'
-    DOCX_TEXT = DOCX_NAMESPACE + 't'
+    #tag names for the xml parser
+    DOCX_PARAGRAPH="w:p"
+    DOCX_SECTION="w:r"
+    DOCX_TEXT="w:t"
+
     # path to document.xml in the docx file
     DOC_XML_PATH='word/document.xml'
 
@@ -46,22 +47,14 @@ class DocxHandler(XmlBasedHandler):
         # parse the xml files
         self.parseXML()
 
-    def parseXML(self):
 
-        for filename, zipf in self.files.items():
-            self.xml_content[filename] = etree.fromstring(zipf)
-
-        # get all the paragraphs
-        self.buildParagraphList(self.xml_content)
-        # debug info
-        print("readen files: " + str(len(self.xml_content)))
-
-    def buildParagraphList(self, dict):
+    def buildParagraphList(self):
 
         # ordered dict in (range(x,y): filename) format, where x is the first and y-1 is the last paragraph that belongs to that file from self.paragrah_list
         self.paragraph_indexes=OrderedDict()
 
-        for filename,file_content in dict.items():
+        for filename,file_content in self.xml_content.items():
+
 
             if len(self.paragraph_indexes) == 0:
                 counter = 0
@@ -70,24 +63,33 @@ class DocxHandler(XmlBasedHandler):
 
             par_counter=counter
 
-            for paragraph in file_content.iter(self.DOCX_PARAGRAPH):
+            # paragraph level
+            for paragraph in file_content.getElementsByTagName(self.DOCX_PARAGRAPH):
+                temp=Paragraph()
 
-                temp=""
+                # fragment level
+                for fragments in paragraph.getElementsByTagName(self.DOCX_SECTION):
+                    # fragment inner level -> formatting and text nodes
+                    for child in fragments.childNodes:
+                        # if it's a text node
+                        if child.nodeName== self.DOCX_TEXT:
+                            # get the text
+                            temp.fragments.append(child.firstChild.nodeValue)
 
-                for text in paragraph.iter(self.DOCX_TEXT):
-
-                    temp+=text.text
-                # adding the paragraph to the list of paragraphs
                 self.paragraph_list.append(temp)
                 par_counter+=1
 
-            self.paragraph_indexes[range(counter,par_counter)]=filename
-        self.para=self.paragraph_list
+
+            self.paragraph_indexes[range(counter, par_counter)] = filename
+        self.para=Paragraph.createParagraphList(self.paragraph_list)
+
+
 
     def update(self,list=[]):
 
         if not list:
             list=self.para
+
 
         if len(list) != len(self.paragraph_list):
             print ("Incorrect list length")
@@ -96,21 +98,14 @@ class DocxHandler(XmlBasedHandler):
             par_counter=0
 
             while (par_counter < len(self.paragraph_list)):
-
-                for paragraph in self.xml_content[self.getFilename(par_counter)].getiterator(self.DOCX_PARAGRAPH):
+                for paragraph in self.xml_content[self.getFilename(par_counter)].getElementsByTagName(self.DOCX_PARAGRAPH):
                     # implement the splitting function/algorithm to here
+                    for fragments in paragraph.getElementsByTagName(self.DOCX_SECTION):
 
-                    for text in paragraph.iter(self.DOCX_TEXT):
-                        #if text.text != "":
-                        text.text = list [par_counter]
-
-                    par_counter+=1
-
-    def save_xml(self):
-        for filename, content in self.xml_content.items():
-                self.createXMLfile(filename, etree.tostring(content, encoding="utf-8"))
-
-
+                        for child in fragments.childNodes:
+                            if child.nodeName == self.DOCX_TEXT:
+                                child.nodeValue = list [par_counter]
+                        par_counter+=1
 
 
 
@@ -120,7 +115,7 @@ class DocxHandler(XmlBasedHandler):
     def print_paras(self):
         j=0
         for i in self.paragraph_list:
-            print (str(j)+" . paragraph\n"+i)
+            print (str(j)+" . paragraph\n"+i.getParagraph())
             j += 1
 
     #debug

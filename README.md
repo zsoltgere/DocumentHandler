@@ -6,7 +6,8 @@ major:
 - all: text splitter function (one for all in BasicHandler)
 - rtf: everything
 - comment
-
+- self.zipfile.close() moving
+- thread safe temp directory
 
 minor:
 

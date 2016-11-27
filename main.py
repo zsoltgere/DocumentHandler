@@ -45,9 +45,9 @@ for ind in range(len(txt_paras)):
 
 txt_handler.save("output")
 
-
-# not implemented yet
 '''
+# not implemented yet
+
 # RTF example
 
 rtf_handler=documentHandler.DocumentHandler(rtf_path)
@@ -58,5 +58,6 @@ for ind in range(len(rtf_paras)):
     rtf_handler.para[ind]=rtf_paras[ind].replace('a','9')
 
 rtf_handler.save("output")
-'''
 
+
+'''

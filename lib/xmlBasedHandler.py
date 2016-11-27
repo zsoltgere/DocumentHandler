@@ -8,6 +8,8 @@ from shutil import move
 from shutil import rmtree
 from lib.basicHandler import BasicHandler
 
+# parser
+import xml.dom.minidom as MD
 
 class XmlBasedHandler(BasicHandler):
 
@@ -17,20 +19,26 @@ class XmlBasedHandler(BasicHandler):
     def __init__(self,path):
         super(XmlBasedHandler,self).__init__(path)
 
-    # parsing functions, will implemented in the child classes, because the odt and the docx will use different parsers
+    # parsing functions, using minidom
     def parseXML(self):
-        pass
+        for filename, zipf in self.files.items():
+            self.xml_content[filename] = MD.parseString(zipf)
+
+        # get all the paragraphs
+        self.buildParagraphList()
+        # debug info
+        print(self.EXTENSION,"readen files:",str(len(self.xml_content)))
 
 
     def createTemporaryDir(self):
         # create the temporary folder
-        if not os.path.exists("temp"):
-            os.makedirs("temp")
+        if not os.path.exists(self.TEMP_DIR):
+            os.makedirs(self.TEMP_DIR)
 
 
     def deleteTemporaryDir(self):
         # delete temporary folder
-        rmtree("temp")
+        rmtree(self.TEMP_DIR)
 
 
     def createXMLfile(self,path,content=""):
@@ -82,8 +90,9 @@ class XmlBasedHandler(BasicHandler):
 
         self.deleteTemporaryDir()
 
-    # will implemented in child classes
+
     def save_xml(self):
-        pass
+        for filename, content in self.xml_content.items():
+            self.createXMLfile(filename, content.documentElement.toprettyxml(encoding="utf-8"))
 
 
