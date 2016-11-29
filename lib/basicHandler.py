@@ -7,9 +7,8 @@ from copy import copy
 
 
 class BasicHandler():
-
+    # will declared in the child classes
     EXTENSION=""
-    VALID_EXTENSIONS=[".docx",".odt",".rtf",".txt"]
 
     def __init__(self,path):
         # save path
@@ -36,14 +35,6 @@ class BasicHandler():
 
 
 
-    def validatePath(self,path):
-        pass
-
-    def validateFilename(self,filename):
-        pass
-
-    def validateList(self,list):
-        pass
 
 
 # Paragraph class will represent a paragraph and separate the fragments as they are stored in the files
@@ -54,7 +45,8 @@ class Paragraph():
 
     def replace(self,old,new):
         for fragment in self.fragments:
-            print ("asd")
+            fragment.replace(old,new)
+
 
     def getParagraph(self):
         paragraph=""
@@ -64,6 +56,7 @@ class Paragraph():
 
         return paragraph
 
+    #class method, create a string list from the given list, if the list elements are Paragraphs
     def createParagraphList(list):
         temp=[]
         for paragraph in list:

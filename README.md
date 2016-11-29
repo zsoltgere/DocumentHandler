@@ -5,13 +5,9 @@ major:
 
 - all: text splitter function (one for all in BasicHandler)
 - rtf: everything
-- comment
-- self.zipfile.close() moving
-- thread safe temp directory
+- comment (already in progress)
+
 
 minor:
 
-- exceptions
-- path validator function
-- filename validator function to accept filenames with or without extension
-- list size validator
+- exceptions (already in progress)

@@ -1,9 +1,9 @@
 #  -*- coding: utf-8 -*-
-from lib.xmlBasedHandler import XmlBasedHandler
 from lib.basicHandler import Paragraph
+from lib.basicHandler import BasicHandler
 
 
-class TxtHandler(XmlBasedHandler):
+class TxtHandler(BasicHandler):
 
     EXTENSION=".txt"
     SEPARATOR = '\n'
