@@ -138,7 +138,6 @@ class Paragraph():
                     temp_match=temp_match[1::]
 
 
-
         for fragment_index,fragment in enumerate(self.fragments):
 
             if fragment_index == 0:
@@ -155,9 +154,26 @@ class Paragraph():
                 print ("next",next)
                 end=next.a-1
 
-            self.fragments[fragment_index]=new[begin:end]
+            self.getOptimalIndex(new, begin, end)
+
+            if len(self.fragments) > 1 and fragment_index > 0 and begin == 0 and end == len(new):
+                # oops, we lost a fragment
+                self.fragments[fragment_index]=""
+            else:
+                self.fragments[fragment_index]=new[begin:end]
 
         print (self.fragments)
+
+    def getOptimalIndex(self,new,begin,end):
+        chars=['.',',','-',' ']
+        slice=new[begin:end]
+
+        for char in chars:
+            if char in slice:
+                print (char,slice.find(char),slice)
+
+
+
 
     def getParagraph(self):
         paragraph=""
