@@ -3,9 +3,11 @@
 # parent class
 from lib.xmlBasedHandler import XmlBasedHandler
 # constant variables
-import lib.constantVariables as constantVariables
+import lib.constantVariables
 # paragraph
 from lib.basicHandler import Paragraph
+
+
 # ordered dictionary to keep insertion order
 from collections import OrderedDict
 
@@ -16,7 +18,7 @@ class OdtHandler(XmlBasedHandler):
     EXTENSION=".odt"
 
     def __init__(self,path):
-        super(OdtHandler,self).__init__(path,constantVariables.FILELIST_ODT)
+        super(OdtHandler,self).__init__(path,lib.constantVariables.FILELIST_ODT)
 
 
 
@@ -34,19 +36,19 @@ class OdtHandler(XmlBasedHandler):
 
             par_counter=counter
 
-            for paragraph in content.getElementsByTagName(constantVariables.ODT_PARAGRAPH):
+            for paragraph in content.getElementsByTagName(lib.constantVariables.ODT_PARAGRAPH):
 
                 temp=Paragraph()
 
                 for node in paragraph.childNodes:
 
-                    if node.nodeName == constantVariables.ODT_TEXT_TAG:
+                    if node.nodeName == lib.constantVariables.ODT_TEXT_TAG:
 
                         temp.fragments.append(node.nodeValue)
 
                     for childnode in node.childNodes:
 
-                        if childnode.nodeName == constantVariables.ODT_TEXT_TAG:
+                        if childnode.nodeName == lib.constantVariables.ODT_TEXT_TAG:
 
                             temp.fragments.append(childnode.nodeValue)
 
@@ -63,18 +65,17 @@ class OdtHandler(XmlBasedHandler):
             list = self.para
 
         if len(list) != len(self.paragraph_list):
-            print("Incorrect list length")
-            # todo: exception!
+            raise ValueError ("Incorrect list length")
         else:
             par_counter=0
 
             while (par_counter < len(self.paragraph_list)):
 
-                for paragraph in self.xml_content[self.getFilename(par_counter)].getElementsByTagName(constantVariables.ODT_PARAGRAPH):
+                for paragraph in self.xml_content[self.getFilename(par_counter)].getElementsByTagName(lib.constantVariables.ODT_PARAGRAPH):
                     # implement the splitting function/algorithm to here
                     splitted_counter = 0
                     for node in paragraph.childNodes:
-                        if node.nodeName == constantVariables.ODT_TEXT_TAG :
+                        if node.nodeName == lib.constantVariables.ODT_TEXT_TAG :
                             if splitted_counter == 0:
                                 node.nodeValue=list[par_counter]
                                 splitted_counter+=1
@@ -84,7 +85,7 @@ class OdtHandler(XmlBasedHandler):
                         # span tag
                         splitted_counter2 = 0
                         for childnode in node.childNodes:
-                            if childnode.nodeName == constantVariables.ODT_TEXT_TAG:
+                            if childnode.nodeName == lib.constantVariables.ODT_TEXT_TAG:
                                 if splitted_counter == 0:
                                     childnode.nodeValue = list[par_counter]
                                     splitted_counter += 1

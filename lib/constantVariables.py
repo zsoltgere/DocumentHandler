@@ -3,6 +3,13 @@
 # lib to measure time
 import time
 
+
+# import the handlers
+from lib.docxHandler import DocxHandler
+from lib.odtHandler import OdtHandler
+from lib.txtHandler import TxtHandler
+from lib.rtfHandler import RtfHandler
+
 '''
 Constant variables and tools
 '''
@@ -30,6 +37,15 @@ FILELIST_ODT = ["content.xml", "styles.xml"]
 ODT_PARAGRAPH = "text:p"
 # text node
 ODT_TEXT_TAG = "#text"
+
+creator = \
+    {
+        'docx' : DocxHandler,
+        'odt' : OdtHandler,
+        'txt' : TxtHandler,
+        'rtf' : RtfHandler
+    }
+
 
 # tool to measure execution time
 class ExecutionMeter():

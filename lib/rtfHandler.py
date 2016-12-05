@@ -2,6 +2,7 @@
 from lib.xmlBasedHandler import XmlBasedHandler
 
 
+# this will be implemented in the future
 class RtfHandler(XmlBasedHandler):
 
     EXTENSION=".rtf"

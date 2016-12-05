@@ -1,10 +1,6 @@
 #  -*- coding: utf-8 -*-
 
-# import the handlers
-from lib.docxHandler import DocxHandler
-from lib.odtHandler import OdtHandler
-from lib.txtHandler import TxtHandler
-from lib.rtfHandler import RtfHandler
+
 # import the costum exception class
 from lib.constantVariables import MyError
 # constant variables
@@ -35,16 +31,8 @@ class DocumentHandler:
                 raise MyError ("The given file extension "+pathls[1].lower()+" is not supported. "+"The valid extensions are: "+str(constantVariables.VALID_EXTENSIONS))
 
             else:
-                # return the suitable handler object
-                if extension == "docx":
-                    return DocxHandler(path)
-                elif extension == "odt":
-                    return OdtHandler(path)
-                elif extension == "rtf":
-                    return RtfHandler(path)
-                elif extension == "txt":
-                    return TxtHandler(path)
 
+                return constantVariables.creator[extension](path)
 
 
 
