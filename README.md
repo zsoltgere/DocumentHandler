@@ -3,8 +3,7 @@ todo:
 
 major:
 
-- all: text splitter function (one for all in BasicHandler)
-- rtf: everything
+- xml based documents (docx,odt): text splitter function (some fixes left only: matches and indexes)
 - comment (already in progress)
 
 
