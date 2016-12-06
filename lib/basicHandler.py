@@ -76,7 +76,6 @@ class Paragraph():
             if match.size > 1:
 
                 temp+=new[match.a:match.a + match.size]
-                #matches.append(new[match.a:match.a + match.size])
                 matches[new[match.a:match.a + match.size]]=match
             else:
                 temp+=" "
@@ -92,10 +91,10 @@ class Paragraph():
         return matches
 
     def update(self,new):
-
+        print ("of",len(self.fragments))
+        print ("old fragments",self.fragments)
         matches_dict = self.getMatches(new,self.getParagraph())
         matches = list (matches_dict.keys())
-
         skeleton=OrderedDict()
         for i in range(len(self.fragments)):
             skeleton[i]=[]
@@ -114,17 +113,13 @@ class Paragraph():
                 for f_index,fragment in enumerate(reversed(self.fragments[:remaining_fragments])):
                     # if found
                     found=fragment.rfind(temp_match)
-                    #print ("searching",match,"in",f_index,"remainin fragments:",remaining_fragments)
                     if found  != -1:
-                        print (temp_match,remaining_fragments-f_index-1)
                         skeleton[remaining_fragments-f_index-1].append(matches_dict[match])
-                        # if match found in fragment, stop searching that match
                         match_found=True
                         break
 
                 if match_found:
                     remaining_matches -= 1
-                    #print (f_index,last_match,remaining_fragments,match)
 
                     # if the fragment was found in a new fragment (fragment without any match), decrease the length of the fragments to spare time
                     if f_index > last_match:
@@ -137,41 +132,106 @@ class Paragraph():
                     # if match not found, that means the match is splitted in the file and need to shorten to find it's fragment
                     temp_match=temp_match[1::]
 
-
+        print ("matches",matches)
+        print ("mat:",skeleton)
+        align=0
         for fragment_index,fragment in enumerate(self.fragments):
 
-            if fragment_index == 0:
-                begin=0
+            if fragment != "" and skeleton[fragment_index]:
+
+                aligned_fragment_index=fragment_index-align
+
+                if aligned_fragment_index != 0:
+
+                    prev = current
+
+                next = None
+                if fragment_index != len(self.fragments)-1:
+                    for i in range (fragment_index+1,len(self.fragments)):
+                        if skeleton[i]:
+                            next=skeleton[i]
+                            break
+
+
+
+                current = skeleton[fragment_index]
+
+
+                if aligned_fragment_index == 0:
+                    #print("fragments:",len(self.fragments))
+
+                    #print ("first case",fragment_index)
+                    begin=0
+
+                    # optimal end -> aligned_index: 1
+
+                    if next:
+                        n=next[-1].a
+                        end = self.getOptimalIndex(new, current[0].a + current[0].size, n)
+                    else:
+                        end=len(new)
+
+
+                elif fragment_index == len(self.fragments)-1:
+                    #print ("last case")
+                    #optimal begin -> aligned_index: len-2
+                    begin = self.getOptimalIndex(new,prev[0].a+prev[0].size,current[0].a)
+                    end=len(new)
+                else:
+
+                    #print ("inner case",fragment_index)
+                    # optimal shit part 1 comes to here
+                    begin = self.getOptimalIndex(new,prev[0].a+prev[0].size,current[0].a)
+                    #print ("prev",prev)
+                    #print ("current",current)
+                    #print ("next",next)
+                    # optimal shit part 2 comes to here
+                    if next:
+                        n=next[-1].a
+                    else:
+                        n=len(new)
+
+                    end=self.getOptimalIndex(new,current[0].a+current[0].size,n)
+
+                #print ("begin",begin)
+                #print ("end",end)
+
+                if len(self.fragments) > 1 and aligned_fragment_index > 0 and begin == 0 and end == len(new):
+                    print ("ops, we lost a fragment",begin,end)
+                    self.fragments[fragment_index]=""
+                else:
+                    self.fragments[fragment_index]=new[begin:end]
+
+
+                if end == len(new):
+                    break
             else:
-                prev=skeleton[fragment_index-1][-1]
-                print ("prev",prev)
-                begin=prev.a+prev.size+1
-
-            if fragment_index == len(self.fragments)-1:
-                end=len(new)
-            else:
-                next=skeleton[fragment_index+1][0]
-                print ("next",next)
-                end=next.a-1
-
-            self.getOptimalIndex(new, begin, end)
-
-            if len(self.fragments) > 1 and fragment_index > 0 and begin == 0 and end == len(new):
-                # oops, we lost a fragment
+                align+=1
                 self.fragments[fragment_index]=""
-            else:
-                self.fragments[fragment_index]=new[begin:end]
 
-        print (self.fragments)
+        print ("new fragments",self.fragments)
 
     def getOptimalIndex(self,new,begin,end):
+
         chars=['.',',','-',' ']
+
         slice=new[begin:end]
 
         for char in chars:
-            if char in slice:
-                print (char,slice.find(char),slice)
+            index = slice.find(char)
+            if index != -1:
+                index+=begin
+                print(char, index)
 
+                if char == '-':
+                    if index > begin:
+                        return index-1
+                else:
+                    if index < end:
+                        return index+1
+                return index
+
+        return int(len(slice)/2)+begin
 
 
 

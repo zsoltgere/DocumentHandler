@@ -103,7 +103,7 @@ class XmlBasedHandler(BasicHandler):
     # saving
     def save(self,name):
         # update the text content with the changes
-        self.update2()
+        self.update()
         # write the new xml files
         self.createXMLfile()
         # create the new zip container

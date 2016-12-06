@@ -60,38 +60,37 @@ class OdtHandler(XmlBasedHandler):
 
 
 
-    def update(self,list=[]):
-        if not list:
-            list = self.para
+    def update(self,updated_text=[]):
+        if not updated_text:
+            updated_text = self.para
 
-        if len(list) != len(self.paragraph_list):
+        if len(updated_text) != len(self.paragraph_list):
             raise ValueError ("Incorrect list length")
         else:
             par_counter=0
 
             while (par_counter < len(self.paragraph_list)):
 
+
                 for paragraph in self.xml_content[self.getFilename(par_counter)].getElementsByTagName(lib.constantVariables.ODT_PARAGRAPH):
-                    # implement the splitting function/algorithm to here
-                    splitted_counter = 0
+
+                    self.paragraph_list[par_counter].update(updated_text[par_counter])
+
+                    fragment_counter = 0
+
                     for node in paragraph.childNodes:
                         if node.nodeName == lib.constantVariables.ODT_TEXT_TAG :
-                            if splitted_counter == 0:
-                                node.nodeValue=list[par_counter]
-                                splitted_counter+=1
-                            else:
-                                # todo
-                                node.nodeValue="###########SPLITTED TEXT (page-break)############TODO#############"
+
+                            node.nodeValue=self.paragraph_list[par_counter].fragments[fragment_counter]
+                            fragment_counter += 1
+
                         # span tag
-                        splitted_counter2 = 0
                         for childnode in node.childNodes:
                             if childnode.nodeName == lib.constantVariables.ODT_TEXT_TAG:
-                                if splitted_counter == 0:
-                                    childnode.nodeValue = list[par_counter]
-                                    splitted_counter += 1
-                                else:
-                                    #todo
-                                    childnode.nodeValue = "###########SPLITTED TEXT (SPAN)############TODO#############"
+
+                                childnode.nodeValue = self.paragraph_list[par_counter].fragments[fragment_counter]
+                                fragment_counter+=1
+
 
                     par_counter+=1
 

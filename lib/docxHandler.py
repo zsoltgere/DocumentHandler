@@ -66,7 +66,7 @@ class DocxHandler(XmlBasedHandler):
 
 
 
-    def update2(self,updated_text=[]):
+    def update(self,updated_text=[]):
         if not updated_text:
             updated_text=self.para
 
@@ -97,7 +97,7 @@ class DocxHandler(XmlBasedHandler):
 
 
 
-    def update(self,list=[]):
+    def update2(self,list=[]):
         if not list:
             list=self.para
 
