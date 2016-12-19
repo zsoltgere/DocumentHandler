@@ -69,13 +69,21 @@ class TxtHandler(BasicHandler):
 
         self.para=list
 
-    def print(self):
-        for i in self.paragraph_list:
-            print(i)
-            print(self.SEPARATOR)
+    def save(self,fpath=None,name=None):
+        from os import path
 
-    def save(self,name):
-        with open(name+self.EXTENSION,'w') as file:
+        tmp = path.split(self.path)
+
+        if fpath == None:
+            path = tmp[0]
+
+        if name == None:
+            name = tmp[1]
+        else:
+            name += self.EXTENSION
+
+
+        with open(path.join(fpath,name),'w') as file:
             # store the number of paragraphs
             ln=len(self.para)
             # iterate through the paragraphs

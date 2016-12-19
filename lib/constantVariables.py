@@ -2,6 +2,8 @@
 
 # lib to measure time
 import time
+#namedtuple
+from collections import namedtuple
 
 
 # import the handlers
@@ -15,8 +17,6 @@ Constant variables and tools
 '''
 
 # constant variables for DocxHandler
-# supported file formats
-VALID_EXTENSIONS = ["docx", "odt", "rtf", "txt"]
 
 # filelist -> main part of the document, header 1-2-3, footer 1-2-3
 FILELIST_DOCX = ['word/document.xml','word/header1.xml','word/header2.xml','word/header3.xml','word/footer1.xml','word/footer2.xml','word/footer3.xml']
@@ -37,7 +37,15 @@ FILELIST_ODT = ["content.xml", "styles.xml"]
 ODT_PARAGRAPH = "text:p"
 # text node
 ODT_TEXT_TAG = "#text"
+# space tag
+ODT_SPACE_TAG = "text:s"
 
+
+Match=namedtuple('Match','a b size')
+# text fitting
+chars = ['.', ',', '-', ' ']
+
+# construction
 creator = \
     {
         'docx' : DocxHandler,
@@ -45,6 +53,9 @@ creator = \
         'txt' : TxtHandler,
         'rtf' : RtfHandler
     }
+
+# supported file formats
+VALID_EXTENSIONS = ["docx", "odt", "rtf", "txt"]
 
 
 # tool to measure execution time

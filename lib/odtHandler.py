@@ -42,6 +42,10 @@ class OdtHandler(XmlBasedHandler):
 
                 for node in paragraph.childNodes:
 
+                    if node.nodeName == lib.constantVariables.ODT_SPACE_TAG:
+
+                        temp.fragments[len(temp.fragments)-1]+=" "
+
                     if node.nodeName == lib.constantVariables.ODT_TEXT_TAG:
 
                         temp.fragments.append(node.nodeValue)
@@ -59,7 +63,6 @@ class OdtHandler(XmlBasedHandler):
         self.para=Paragraph.createParagraphList(self.paragraph_list)
 
 
-
     def update(self,updated_text=[]):
         if not updated_text:
             updated_text = self.para
@@ -73,26 +76,30 @@ class OdtHandler(XmlBasedHandler):
 
 
                 for paragraph in self.xml_content[self.getFilename(par_counter)].getElementsByTagName(lib.constantVariables.ODT_PARAGRAPH):
-
                     self.paragraph_list[par_counter].update(updated_text[par_counter])
 
                     fragment_counter = 0
-
                     for node in paragraph.childNodes:
-                        if node.nodeName == lib.constantVariables.ODT_TEXT_TAG :
 
-                            node.nodeValue=self.paragraph_list[par_counter].fragments[fragment_counter]
+                        if node.nodeName == lib.constantVariables.ODT_TEXT_TAG :
+                            txt=self.paragraph_list[par_counter].fragments[fragment_counter]
+                            node.nodeValue=txt
                             fragment_counter += 1
 
                         # span tag
                         for childnode in node.childNodes:
                             if childnode.nodeName == lib.constantVariables.ODT_TEXT_TAG:
-
-                                childnode.nodeValue = self.paragraph_list[par_counter].fragments[fragment_counter]
+                                txt2 = self.paragraph_list[par_counter].fragments[fragment_counter]
+                                childnode.nodeValue = txt2
                                 fragment_counter+=1
-
-
                     par_counter+=1
+
+                    #remove additional spaces
+                    for ind,i in enumerate(paragraph.childNodes):
+                        if i.nodeName == lib.constantVariables.ODT_SPACE_TAG:
+                            i.parentNode.removeChild(i)
+
+
 
 
 

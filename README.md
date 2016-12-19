@@ -1,7 +1,7 @@
 ﻿DocumentHandler
 =======
 
-This is a program written in Python 3.4 to access text content of the supported document formats directly, and after costum manipulations the program is able to insert back the changed text into the original (or into a new) document. 
+This is a program written in Python 3.4 to access text content of the supported document formats directly, and after costum manipulations the program is able to insert back the changed text into the original (or into a new) document. Only the modules of the Python Standard Library 3.4 are used by the program.
 
 The currently supported document formats:  docx, odt, txt.
 
@@ -73,18 +73,12 @@ The given list must contains Paragraph instances. The function calls the Paragra
 
 issues:
 ---------------
-major:
----------------
-- context manager (book: page 34)
-- xml based documents (docx,odt): text splitter function (some fixes left only: matches and indexes)
-- comment (already in progress)
 
-minor:
----------------
-- exceptions (already in progress)
+- more comment (already in progress)
 
 TODO / IDEAS
 --------------
 
 - Support footnotes in docx/odt.
 - Support the rtf format.
+- Implement context manager (book: page 34)

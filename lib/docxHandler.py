@@ -55,7 +55,6 @@ class DocxHandler(XmlBasedHandler):
                         if child.nodeName== lib.constantVariables.DOCX_TEXT:
                             # get the text
                             temp.fragments.append(child.firstChild.nodeValue)
-                            #print(child.firstChild.nodeValue)
                 self.paragraph_list.append(temp)
                 par_counter+=1
 
@@ -63,6 +62,7 @@ class DocxHandler(XmlBasedHandler):
             self.paragraph_indexes[range(counter, par_counter)] = filename
 
         self.para=Paragraph.createParagraphList(self.paragraph_list)
+
 
 
 
@@ -78,9 +78,9 @@ class DocxHandler(XmlBasedHandler):
 
             while (par_counter < len(self.paragraph_list)):
 
-                self.paragraph_list[par_counter].update(updated_text[par_counter])
 
                 for paragraph in self.xml_content[self.getFilename(par_counter)].getElementsByTagName(lib.constantVariables.DOCX_PARAGRAPH):
+                    self.paragraph_list[par_counter].update(updated_text[par_counter])
 
                     fragment_counter = 0
 
@@ -89,8 +89,11 @@ class DocxHandler(XmlBasedHandler):
                         for child in fragments.childNodes:
 
                             if child.nodeName == lib.constantVariables.DOCX_TEXT:
-
+                                #print  (updated_text[par_counter])
+                                #print (self.paragraph_list [par_counter].fragments[fragment_counter])
                                 child.firstChild.nodeValue = self.paragraph_list [par_counter].fragments[fragment_counter]
+                                #print (child.firstChild.nodeValue)
+
                                 fragment_counter+=1
 
                     par_counter+=1
@@ -100,6 +103,8 @@ class DocxHandler(XmlBasedHandler):
     def update2(self,list=[]):
         if not list:
             list=self.para
+
+        print (list)
 
         if len(list) != len(self.paragraph_list):
             raise ValueError ("Incorrect list length")

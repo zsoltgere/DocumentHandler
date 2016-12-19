@@ -30,6 +30,7 @@ class DocumentHandler:
 
                 raise MyError ("The given file extension "+pathls[1].lower()+" is not supported. "+"The valid extensions are: "+str(constantVariables.VALID_EXTENSIONS))
 
+            # test path validity!!!! os.path.exists
             else:
 
                 return constantVariables.creator[extension](path)

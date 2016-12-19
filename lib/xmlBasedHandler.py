@@ -55,7 +55,6 @@ class XmlBasedHandler(BasicHandler):
         # close the zip file
         zip_file.close()
 
-
     # parsing functions, using minidom
     def parseXML(self):
         # parse every xml file
@@ -80,16 +79,28 @@ class XmlBasedHandler(BasicHandler):
 
 
 
-    def createZipFile(self,filename):
+    def createZipFile(self,fpath=None,fname=None):
+
+        tmp = path.split(self.path)
+
+        if fpath == None:
+            fpath = tmp[0]
+
+        if fname == None:
+            fname = tmp[1]
+        else:
+            fname += self.EXTENSION
+
         #new zip container in the temporary directory
-        zip=zipfile.ZipFile(path.join(self.tempdirectory.name,filename+self.EXTENSION),'w')
+        zip=zipfile.ZipFile(path.join(self.tempdirectory.name,fname),'w')
         # fill the zip with the files
         for i in self.nameList:
             zip.write(path.join(self.tempdirectory.name,i),i,8)
         # close it
         zip.close()
         # move it
-        move(zip.filename,filename+self.EXTENSION)
+        #print ("SAVING TO...",path.join(fpath,fname))
+        move(zip.filename,path.join(fpath,fname))
         # delete the temporary directory
         self.tempdirectory.cleanup()
 
@@ -101,13 +112,13 @@ class XmlBasedHandler(BasicHandler):
                 return value
 
     # saving
-    def save(self,name):
+    def save(self,path=None,name=None):
         # update the text content with the changes
         self.update()
         # write the new xml files
         self.createXMLfile()
         # create the new zip container
-        self.createZipFile(name)
+        self.createZipFile(path,name)
 
 
 
