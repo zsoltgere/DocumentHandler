@@ -9,7 +9,6 @@ import lib.constantVariables as constantVariables
 #the user will create this class
 class DocumentHandler:
 
-
     def __init__(self):
         pass
 
@@ -32,9 +31,4 @@ class DocumentHandler:
 
             # test path validity!!!! os.path.exists
             else:
-
                 return constantVariables.creator[extension](path)
-
-
-
-

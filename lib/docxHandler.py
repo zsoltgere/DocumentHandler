@@ -6,7 +6,7 @@ from lib.xmlBasedHandler import XmlBasedHandler
 # constant variables
 import lib.constantVariables
 # paragraph
-from lib.basicHandler import Paragraph
+from lib.paragraph import Paragraph
 
 
 # ordered dictionary to keep insertion order
@@ -18,13 +18,9 @@ class DocxHandler(XmlBasedHandler):
 
     EXTENSION=".docx"
 
-
-
-
     # file path, parser (default is lxml)
     def __init__(self,path):
         super(DocxHandler,self).__init__(path,lib.constantVariables.FILELIST_DOCX)
-
 
 
     def buildParagraphList(self):
@@ -33,7 +29,6 @@ class DocxHandler(XmlBasedHandler):
         self.paragraph_indexes=OrderedDict()
 
         for filename,file_content in self.xml_content.items():
-
 
             if len(self.paragraph_indexes) == 0:
                 counter = 0

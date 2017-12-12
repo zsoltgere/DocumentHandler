@@ -3,12 +3,15 @@ from lib.documentHandler import DocumentHandler
 from lib.constantVariables import ExecutionMeter
 
 # files without text splitting inside the paragrapsh
-docx_path="d:\\Egyetem\\09\\Önlab\\onlab\\test\\inputs\\minta.docx"
-odt_path="d:\\Egyetem\\09\\Önlab\\onlab\\test\\inputs\\minta.odt"
-rtf_path="d:\\Egyetem\\09\\Önlab\\onlab\\test\\inputs\\proba2.rtf"
-txt_path="d:\\Egyetem\\09\\Önlab\\onlab\\test\\inputs\\minta.txt"
+docx_path="d:\\Egyetem\szakd\\DocumentHandler\\test\inputs\proba2.docx"
+odt_path="d:\\Egyetem\szakd\\DocumentHandler\\test\inputs\proba2.odt"
+txt_path="d:\\Egyetem\szakd\\DocumentHandler\\test\inputs\\minta.txt"
+
 outputname="output"
 
+output_path = "d:\\Egyetem\szakd\\DocumentHandler\\test\outputs\\"
+
+"""
 spellchecker={
 "bemutatésa":"bemutatása",
 "Radcliff":"Ratcliff",
@@ -16,9 +19,12 @@ spellchecker={
 "összehasonlás":"összehasonlítás",
 "ürres":"üres"
 }
+"""
 
-
-
+spellchecker = {
+    "lábjegyzet1111111111111111111111111111" : "lábjegyzet",
+    "dasdasdasdasdasdasdlábjegyzet" : "lábjegyzet"
+}
 
 # DOCX example
 
@@ -39,7 +45,7 @@ for para in docx_paras:
 
 for i,j in enumerate(ls):
     docx_handler.para[i]=j
-docx_handler.save("d:\\Egyetem\\09\\Önlab\\onlab\\test\\outputs\\",outputname)
+docx_handler.save(output_path,outputname)
 
 print (docx_path,docx_timer.stop())
 
@@ -62,11 +68,9 @@ for para in odt_paras:
 
 for i,j in enumerate(ls):
     odt_handler.para[i]=j
-odt_handler.save("d:\\Egyetem\\09\\Önlab\\onlab\\test\\outputs\\",outputname)
+odt_handler.save(output_path,outputname)
 
 print (odt_path,odt_timer.stop())
-
-
 
 
 
@@ -83,30 +87,6 @@ for ind in range(len(txt_paras)):
     txt_handler.para[ind]=txt_handler.para[ind].replace('ODT','Open Document Format')
     txt_handler.para[ind]=txt_handler.para[ind].replace('DOCX','Office Open XML')
 
-txt_handler.save("d:\\Egyetem\\09\\Önlab\\onlab\\test\\outputs\\",outputname)
+txt_handler.save(output_path,outputname)
 
 print (txt_path,txt_timer.stop())
-
-
-
-
-'''
-# not implemented yet
-
-# RTF example
-
-rtf_timer=ExecutionMeter()
-
-
-rtf_handler=DocumentHandler(rtf_path)
-
-rtf_paras = rtf_handler.readall()
-
-for ind in range(len(rtf_paras)):
-    rtf_handler.para[ind]=rtf_paras[ind].replace('a','9')
-
-rtf_handler.save("output")
-
-print (rtf_path,rtf_timer.stop())
-
-'''

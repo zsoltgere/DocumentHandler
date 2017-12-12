@@ -10,7 +10,6 @@ from collections import namedtuple
 from lib.docxHandler import DocxHandler
 from lib.odtHandler import OdtHandler
 from lib.txtHandler import TxtHandler
-from lib.rtfHandler import RtfHandler
 
 '''
 Constant variables and tools
@@ -19,7 +18,7 @@ Constant variables and tools
 # constant variables for DocxHandler
 
 # filelist -> main part of the document, header 1-2-3, footer 1-2-3
-FILELIST_DOCX = ['word/document.xml','word/header1.xml','word/header2.xml','word/header3.xml','word/footer1.xml','word/footer2.xml','word/footer3.xml']
+FILELIST_DOCX = ['word/document.xml','word/header1.xml','word/header2.xml','word/header3.xml','word/footer1.xml','word/footer2.xml','word/footer3.xml','word/footnotes.xml']
 # tag names for the dom tree
 # paragraph node
 DOCX_PARAGRAPH = "w:p"
@@ -50,12 +49,11 @@ creator = \
     {
         'docx' : DocxHandler,
         'odt' : OdtHandler,
-        'txt' : TxtHandler,
-        'rtf' : RtfHandler
+        'txt' : TxtHandler
     }
 
 # supported file formats
-VALID_EXTENSIONS = ["docx", "odt", "rtf", "txt"]
+VALID_EXTENSIONS = ["docx", "odt", "txt"]
 
 
 # tool to measure execution time

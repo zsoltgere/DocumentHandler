@@ -5,7 +5,7 @@ from lib.xmlBasedHandler import XmlBasedHandler
 # constant variables
 import lib.constantVariables
 # paragraph
-from lib.basicHandler import Paragraph
+from lib.paragraph import Paragraph
 
 
 # ordered dictionary to keep insertion order
@@ -42,7 +42,7 @@ class OdtHandler(XmlBasedHandler):
 
                 for node in paragraph.childNodes:
 
-                    if node.nodeName == lib.constantVariables.ODT_SPACE_TAG:
+                    if node.nodeName == lib.constantVariables.ODT_SPACE_TAG and len(temp.fragments) > 0:
 
                         temp.fragments[len(temp.fragments)-1]+=" "
 
@@ -76,7 +76,9 @@ class OdtHandler(XmlBasedHandler):
 
 
                 for paragraph in self.xml_content[self.getFilename(par_counter)].getElementsByTagName(lib.constantVariables.ODT_PARAGRAPH):
+                    print (self.paragraph_list[par_counter].getParagraph())
                     self.paragraph_list[par_counter].update(updated_text[par_counter])
+                    print (self.paragraph_list[par_counter].getParagraph())
 
                     fragment_counter = 0
                     for node in paragraph.childNodes:
@@ -98,11 +100,3 @@ class OdtHandler(XmlBasedHandler):
                     for ind,i in enumerate(paragraph.childNodes):
                         if i.nodeName == lib.constantVariables.ODT_SPACE_TAG:
                             i.parentNode.removeChild(i)
-
-
-
-
-
-
-
-

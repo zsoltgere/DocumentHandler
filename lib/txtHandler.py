@@ -1,5 +1,5 @@
 #  -*- coding: utf-8 -*-
-from lib.basicHandler import Paragraph
+from lib.paragraph import Paragraph
 from lib.basicHandler import BasicHandler
 
 

@@ -38,7 +38,6 @@ class XmlBasedHandler(BasicHandler):
         self.nameList = zip_file.namelist()
         # ordered dictionary in (filename,file) structure
         self.files=OrderedDict()
-
         #iterate the files that contains text
         for filename in self.filelist:
             # if it's exist in the archive
