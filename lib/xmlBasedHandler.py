@@ -1,17 +1,11 @@
 #  -*- coding: utf-8 -*-
 
-
-# file operations
+from lib.basicHandler import BasicHandler
 import zipfile
 import tempfile
 from os import path
 from shutil import move
-
-# parent class
-from lib.basicHandler import BasicHandler
-# parser
 import xml.dom.minidom as minidom
-# collection
 from collections import OrderedDict
 
 
@@ -71,7 +65,7 @@ class XmlBasedHandler(BasicHandler):
             try:
                 # open an xml file in the temporary directory
                 with open(path.join(self.tempdirectory.name,filename),"w",encoding="utf-8") as file:
-                    file.write(content.documentElement.toprettyxml(encoding="utf-8").decode("utf-8"))
+                    file.write(content.documentElement.toxml(encoding="utf-8").decode("utf-8"))
             except IOError as e:
                 print ('IOError')
 
@@ -113,7 +107,7 @@ class XmlBasedHandler(BasicHandler):
     # saving
     def save(self,path=None,name=None):
         # update the text content with the changes
-        self.update()
+        self.update("dtw")
         # write the new xml files
         self.createXMLfile()
         # create the new zip container

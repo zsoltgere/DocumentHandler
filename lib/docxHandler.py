@@ -1,15 +1,8 @@
 #  -*- coding: utf-8 -*-
 
-
-# parent class
 from lib.xmlBasedHandler import XmlBasedHandler
-# constant variables
 import lib.constantVariables
-# paragraph
 from lib.paragraph import Paragraph
-
-
-# ordered dictionary to keep insertion order
 from collections import OrderedDict
 
 
@@ -18,7 +11,6 @@ class DocxHandler(XmlBasedHandler):
 
     EXTENSION=".docx"
 
-    # file path, parser (default is lxml)
     def __init__(self,path):
         super(DocxHandler,self).__init__(path,lib.constantVariables.FILELIST_DOCX)
 
@@ -61,7 +53,7 @@ class DocxHandler(XmlBasedHandler):
 
 
 
-    def update(self,updated_text=[]):
+    def update(self,mode = "dtw",updated_text=[]):
         if not updated_text:
             updated_text=self.para
 
@@ -75,48 +67,26 @@ class DocxHandler(XmlBasedHandler):
 
 
                 for paragraph in self.xml_content[self.getFilename(par_counter)].getElementsByTagName(lib.constantVariables.DOCX_PARAGRAPH):
-                    self.paragraph_list[par_counter].update(updated_text[par_counter])
+                    #self.paragraph_list[par_counter].printfragments()
+                    self.paragraph_list[par_counter].update(updated_text[par_counter],mode)
 
                     fragment_counter = 0
-
+                    #print("UPDATED_PARAGRAPH:", updated_text[par_counter])
                     for fragments in paragraph.getElementsByTagName(lib.constantVariables.DOCX_SECTION):
 
                         for child in fragments.childNodes:
 
                             if child.nodeName == lib.constantVariables.DOCX_TEXT:
-                                #print  (updated_text[par_counter])
-                                #print (self.paragraph_list [par_counter].fragments[fragment_counter])
-                                child.firstChild.nodeValue = self.paragraph_list [par_counter].fragments[fragment_counter]
-                                #print (child.firstChild.nodeValue)
+                                #print ("UPDATED_FRAGMENT:",self.paragraph_list [par_counter].fragments[fragment_counter])
+                                new = self.paragraph_list[par_counter].fragments[fragment_counter]
+                                if child.firstChild.nodeValue:
+                                    if child.firstChild.nodeValue[0] == " ":
+                                        if new:
+                                            if new[0] != " ":
+                                                new = " " + new
+                                child.firstChild.nodeValue = new
+                                #print ("PRINTED_NODEVALUE: ",child.firstChild.nodeValue)
 
                                 fragment_counter+=1
 
                     par_counter+=1
-
-
-
-    def update2(self,list=[]):
-        if not list:
-            list=self.para
-
-        print (list)
-
-        if len(list) != len(self.paragraph_list):
-            raise ValueError ("Incorrect list length")
-        else:
-            par_counter=0
-
-            while (par_counter < len(self.paragraph_list)):
-                for paragraph in self.xml_content[self.getFilename(par_counter)].getElementsByTagName(lib.constantVariables.DOCX_PARAGRAPH):
-                    # implement the splitting function/algorithm to here
-                    for fragments in paragraph.getElementsByTagName(lib.constantVariables.DOCX_SECTION):
-
-                        for child in fragments.childNodes:
-                            if child.nodeName == lib.constantVariables.DOCX_TEXT:
-                                child.firstChild.nodeValue = list [par_counter]
-                    par_counter+=1
-
-
-
-
-

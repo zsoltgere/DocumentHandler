@@ -1,9 +1,6 @@
 #  -*- coding: utf-8 -*-
 
-
 from collections import OrderedDict
-
-
 
 class BasicHandler():
     # will declared in the child classes

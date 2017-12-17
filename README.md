@@ -1,8 +1,7 @@
 ﻿DocumentHandler
 =======
 
-This is a program written in Python 3.4 to access text content of the supported document formats directly, and after costum manipulations the program is able to insert back the changed text into the original (or into a new) document. Only the modules of the Python Standard Library 3.4 are used by the program.
-
+DocumentHandler is written in Python 3.4 to provide access to the text content of the supported document formats directly, and after manipulations the program is able to insert back the changed text into the original document file. There are no dependencies ,only the modules of the Python 3.4 Standard Library are used.
 The currently supported document formats:  docx, odt, txt.
 
 Documentation
@@ -78,7 +77,4 @@ issues:
 
 TODO / IDEAS
 --------------
-
-- Support footnotes in docx/odt.
-- Support the rtf format.
 - Implement context manager (book: page 34)
