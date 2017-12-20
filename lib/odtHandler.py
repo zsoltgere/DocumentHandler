@@ -58,7 +58,7 @@ class OdtHandler(XmlBasedHandler):
             self.paragraph_indexes[range(counter,par_counter)]=filename
         self.para=Paragraph.createParagraphList(self.paragraph_list)
     # further possibilities: made it recursive
-    def update(self,mode = "dtw",updated_text=[]):
+    def update(self,updated_text=[],mode = "dtw"):
         if not updated_text:
             updated_text = self.para
 
@@ -140,9 +140,7 @@ class OdtHandler(XmlBasedHandler):
         date = document.createElement(lib.constantVariables.ODT_DATE_TAG)
         date.nodeValue = getTime()
         info.appendChild(creator)
-        print (creator.nodeValue)
         info.appendChild(date)
-        print (date.nodeValue)
         t.appendChild(info)
         root.appendChild(t)
         return root

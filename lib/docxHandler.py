@@ -53,7 +53,7 @@ class DocxHandler(XmlBasedHandler):
 
 
 
-    def update(self,mode = "dtw",updated_text=[]):
+    def update(self,updated_text=[],mode = "dtw"):
         if not updated_text:
             updated_text=self.para
 

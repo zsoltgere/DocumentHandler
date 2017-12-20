@@ -70,7 +70,7 @@ class TxtHandler(BasicHandler):
 
         self.para=list
 
-    def save(self,fpath=None,name=None):
+    def save(self,fpath=None,name=None,list=[]):
         from os import path
 
         tmp = path.split(self.path)
@@ -83,14 +83,16 @@ class TxtHandler(BasicHandler):
         else:
             name += self.EXTENSION
 
+        if not list:
+            list = self.para
 
         with open(path.join(fpath,name),'w') as file:
             # store the number of paragraphs
-            ln=len(self.para)
+            ln=len(list)
             # iterate through the paragraphs
             for i in range(ln):
                 # write i. paragraph
-                file.write(self.para[i])
+                file.write(list[i])
                 # if i is not the last paragraph
                 if i != ln-1:
                     # write predefined separator line between two paragraphs

@@ -26,5 +26,5 @@ class BasicHandler():
     def update(self,list=[]):
         pass
 
-    def save(self,name):
+    def save(self,name,list=[]):
         pass

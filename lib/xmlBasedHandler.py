@@ -50,13 +50,17 @@ class XmlBasedHandler(BasicHandler):
 
     # parsing functions, using minidom
     def parseXML(self):
+        print ("Reading: " + self.path)
         # parse every xml file
         for filename, zipf in self.files.items():
             self.xml_content[filename] = minidom.parseString(zipf)
         # get all the paragraphs
         self.buildParagraphList()
         # debug info to the console
-        print(self.EXTENSION,"readen files:",str(len(self.xml_content)))
+        message = "XML files: " + str(len(self.xml_content))
+        for filename,file in self.xml_content.items():
+            message += " " + filename
+        print(message)
 
     # creating
     def createXMLfile(self):
@@ -105,9 +109,9 @@ class XmlBasedHandler(BasicHandler):
                 return value
 
     # saving
-    def save(self,path=None,name=None):
+    def save(self,path=None,name=None,list=[],mode = "dtw"):
         # update the text content with the changes
-        self.update("dtw")
+        self.update(list,mode)
         # write the new xml files
         self.createXMLfile()
         # create the new zip container
