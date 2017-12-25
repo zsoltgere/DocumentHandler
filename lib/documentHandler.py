@@ -3,6 +3,7 @@
 from lib.utils import DocumentHandlerException
 import lib.constantVariables as constantVariables
 
+
 #the user will create this class
 class DocumentHandler:
 

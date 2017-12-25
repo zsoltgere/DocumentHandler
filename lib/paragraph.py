@@ -22,12 +22,11 @@ class Paragraph():
         }
 
     def printfragments(self):
-        print("\n")
         for index,value in enumerate(self.fragments):
             print (index,value)
         if not len(self.fragments):
             print ("EMPTY PARAGRAPH")
-        print("\n")
+        print ("\n")
 
     def replace(self,old,new):
         for i,fragment in enumerate(self.fragments):

@@ -2,6 +2,7 @@
 
 from collections import OrderedDict
 
+
 class BasicHandler():
     # will declared in the child classes
     EXTENSION=""
@@ -15,6 +16,12 @@ class BasicHandler():
         self.para=[]
         self.xml_content=OrderedDict()
 
+    # context manager
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
     # returns a list that contains all the paragraphs of the document
     def readall(self):
         # returns the copy of the paragraph list

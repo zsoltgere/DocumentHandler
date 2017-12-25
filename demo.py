@@ -11,7 +11,8 @@ output_path = "d:\\Egyetem\szakd\\DocumentHandler\\test\outputs\\"
 
 
 param_set = 0
-mode = 5
+mode = -1
+algorithm = 0
 
 if param_set == 0:
     docx_path="d:\\Egyetem\szakd\\DocumentHandler\\test\inputs\proba2.docx"
@@ -44,12 +45,31 @@ elif param_set == 2:
     outputname = "korrektura"
     spellchecker = {}
 
+if algorithm == 0:
+    algorithm_ = "dtw"
+else:
+    algorithm_ = "lcs"
 
 if mode in [-1]:
+    # DOCX example with context manager
 
-    print(OdtHandler.createChangedRegionNode("deletion","Gere Zsolt Tamás").documentElement.toxml())
+    docx_timer=ExecutionMeter()
 
-if mode in [0,5]:
+    with DocumentHandler(docx_path) as docx_handler:
+        docx_paras = docx_handler.readall()
+        modified_paragraphs = []
+        for para in docx_paras:
+            temp = para.split(' ')
+            for i, word in enumerate(temp):
+                if word in spellchecker:
+                    temp[i] = spellchecker[word]
+            t = ' '.join(temp)
+            modified_paragraphs.append(t)
+    docx_handler.save(output_path,outputname,modified_paragraphs,algorithm_)
+
+    print (docx_path,docx_timer.stop())
+
+if mode in [0,4]:
     par_1 = Paragraph()
     par_1.fragments.append("d ")                                #0
     par_1.fragments.append("")                                  #1
@@ -69,7 +89,7 @@ if mode in [0,5]:
 
     dtw_timer = ExecutionMeter()
     par_1.printfragments()
-    par_1.update("h Márta szeret néha a macskájával Bélával széttördeltszóóó minuszegy a h egy kettő három négy öt. próba")
+    par_1.update("h Márta szeret néha a macskájával Bélával széttördeltszóóó minuszegy a h egy kettő három négy öt. próba",algorithm_)
     par_1.printfragments()
     print (dtw_timer.stop())
 
@@ -84,18 +104,16 @@ if mode in [1,5]:
 
     docx_paras = docx_handler.readall()
 
-    ls=[]
+    modified_paragraphs=[]
     for para in docx_paras:
         temp=para.split(' ')
         for i,word in enumerate(temp):
             if word in spellchecker:
                 temp[i]=spellchecker[word]
         t=' '.join(temp)
-        ls.append(t)
+        modified_paragraphs.append(t)
 
-    for i,j in enumerate(ls):
-        docx_handler.para[i]=j
-    docx_handler.save(output_path,outputname)
+    docx_handler.save(output_path,outputname,modified_paragraphs,algorithm_)
 
     print (docx_path,docx_timer.stop())
 
@@ -108,35 +126,33 @@ if mode in [2,5]:
 
     odt_paras = odt_handler.readall()
 
-    ls=[]
+    modified_paragraphs=[]
     for para in odt_paras:
         temp=para.split(' ')
         for i,word in enumerate(temp):
             if word in spellchecker:
                 temp[i]=spellchecker[word]
         t=' '.join(temp)
-        ls.append(t)
+        modified_paragraphs.append(t)
 
-    for i,j in enumerate(ls):
-        odt_handler.para[i]=j
-    odt_handler.save(output_path,outputname)
+    odt_handler.save(output_path,outputname,modified_paragraphs,algorithm_)
 
     print (odt_path,odt_timer.stop())
 
-if mode == 4:
+if mode in [3,5]:
     # TXT example
 
     txt_timer=ExecutionMeter()
 
-
     txt_handler=DocumentHandler(txt_path)
 
     txt_paras = txt_handler.readall()
-
+    modified_paragraphs = []
     for ind in range(len(txt_paras)):
-        txt_handler.para[ind]=txt_handler.para[ind].replace('ODT','Open Document Format')
-        txt_handler.para[ind]=txt_handler.para[ind].replace('DOCX','Office Open XML')
+        txt_paras[ind] = txt_paras[ind].replace('ODT','Open Document Format')
+        txt_paras[ind] = txt_paras[ind].replace('DOCX','Office Open XML')
+        modified_paragraphs.append(txt_paras[ind])
 
-    txt_handler.save(output_path,outputname)
+    txt_handler.save(output_path,outputname,modified_paragraphs)
 
     print (txt_path,txt_timer.stop())
